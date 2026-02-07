@@ -9,13 +9,22 @@
     <div class="info-alert">
       <el-alert
         title="Для указания нескольких меток для одной пару логин\пароль используйте ;"
-        type="info"
+        type="primary"
         show-icon
         :closable="false"
-      />
+      >
+        <template #icon>
+          <el-icon><QuestionFilled /></el-icon>
+        </template>
+      </el-alert>
     </div>
 
     <div class="account-list">
+      <div v-if="accounts.length === 0" class="labels-row">
+        <el-row>
+          <el-col><label>Тут пока нет записей</label></el-col>
+        </el-row>
+      </div>
       <div v-if="accounts.length > 0" class="labels-row">
         <el-row :gutter="20">
           <el-col :span="6"><label>Метки</label></el-col>
@@ -30,6 +39,8 @@
           <el-col :span="6">
             <el-input
               v-model="accountRawLabels[account.id]"
+              type="textarea"
+              :autosize="{ minRows: 1, maxRows: 4 }"
               maxlength="50"
               placeholder="Метка 1; Метка 2"
               @blur="handleUpdate(account)"
@@ -77,7 +88,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted } from 'vue';
-import { Plus, Delete } from '@element-plus/icons-vue';
+import { Plus, Delete, QuestionFilled } from '@element-plus/icons-vue';
 import { useAccountStore } from '../store/accountStore';
 import type { Account } from '../types';
 
@@ -158,7 +169,8 @@ const handleUpdate = (account: Account) => {
   margin-bottom: 15px;
 }
 
-.is-error :deep(.el-input__wrapper) {
+.is-error :deep(.el-input__wrapper),
+.is-error :deep(.el-textarea__inner) {
   box-shadow: 0 0 0 1px var(--el-color-danger) inset !important;
 }
 
